@@ -63,7 +63,8 @@
 }
 .codeeditor__content__rows {
 	text-align: right;
-	max-height: calc(var(--height) - var(--metaHeight));
+	/* max-height: calc(var(--height) - var(--metaHeight)); */
+	max-height: 100%;
 	border-right: 1px solid var(--color-darkblue);
 	overflow: hidden;
 	opacity: .5;

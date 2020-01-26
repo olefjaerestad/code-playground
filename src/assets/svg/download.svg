@@ -1,0 +1,50 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+	<g stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round">
+		<!-- <path d="
+			M 20,20
+			H 10
+			C 3,20 3,20 3,27
+			V 90
+			C 3,97 3,97 10,97
+			H 90
+			C 97,97 97,97 97,90
+			V 27
+			C 97,20 97,20 90,20
+			H 80
+		" pathLength="1" /> -->
+		<path d="
+			M 3,50
+			C 3,50 3,50 3,57
+			V 90
+			C 3,97 3,97 10,97
+			H 90
+			C 97,97 97,97 97,90
+			V 50
+		" pathLength="1" />
+		<path d="
+			M 50,3
+			V 50
+			M 50,50
+			l -15,-15
+			M 50,50
+			l 15,-15
+		" pathLength="1" />
+	</g>
+	<style>
+	path {
+		transition: all .4s ease-in-out;
+	}
+	path:nth-of-type(2) {
+		transition-delay: .3s;
+	}
+	button:hover path,
+	button:focus path {
+		stroke-dasharray: 1;
+		stroke-dashoffset: 2;
+	}
+	button:hover path:nth-of-type(2),
+	button:focus path:nth-of-type(2) {
+		stroke-dashoffset: -2;
+	}
+	</style>
+</svg>

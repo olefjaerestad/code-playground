@@ -42,12 +42,7 @@
 	display: flex;
 	flex-direction: column;
 
-	--color-primary: hsl(327, 67%, 22%);
-	--color-white: hsl(0, 0%, 100%);
-	--color-darkGray: hsl(0, 0%, 20%);
-	--color-black: hsl(228, 9%, 11%);
-
-	--metaHeight: 60px;
+	--metaHeight: 70px;
 }
 
 .playground__meta {
@@ -61,8 +56,12 @@
 	justify-content: space-between;
 	align-items: center;
 }
-.playground__meta button svg {
-	width: 20px;
+.playground__meta__share {
+	display: flex;
+	align-items: center;
+}
+.playground__meta__share > * {
+	margin-right: 5px;
 }
 
 .playground__main {

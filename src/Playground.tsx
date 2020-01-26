@@ -3,6 +3,10 @@ import CodeEditor from './components/CodeEditor/CodeEditor'; // todo: replace wi
 import './Playground.css';
 // import CodeEditor from '@olefjaerestad/code-editor';
 import {ReactComponent as ShareIcon} from './assets/svg/share.svg';
+import {ReactComponent as ImportIcon} from './assets/svg/import.svg';
+import {ReactComponent as ExportIcon} from './assets/svg/export.svg';
+// import {ReactComponent as DownloadIcon} from './assets/svg/download.svg';
+import {compress, decompress} from 'lz-string';
 
 const App: React.FC = () => {
 	const [title, setTitle] = useState('Untitled');
@@ -41,6 +45,45 @@ const App: React.FC = () => {
 		iframeDocument.close();
 	}
 
+	const generateShareToken = (e: SyntheticEvent) => {
+		try {
+			const tokenString = compress(JSON.stringify({
+				title,
+				html: html.current,
+				css: css.current,
+				js: js.current,
+			}));
+			setShareToken(tokenString);
+		} catch(e) {
+			console.log('Couldn\'t generate share token. The generator uses JSON.stringify(), so this might be due to bad JSON. Try checking your code for errors.');
+		}
+	}
+
+	const importShareToken = (e: SyntheticEvent) => {
+		try {
+			const tokenObj = JSON.parse(decompress(shareToken));
+
+			if ( 
+			!tokenObj.hasOwnProperty('title') || 
+			!tokenObj.hasOwnProperty('html') || 
+			!tokenObj.hasOwnProperty('css') || 
+			!tokenObj.hasOwnProperty('js') ) {
+				throw new Error('The token is missing one of these properties: title, html, css, js');
+			}
+
+			console.log(tokenObj);
+
+			setTitle(tokenObj.title);
+			// todo: the following lines don't update the ui. need to find a solution (preferably without using state, in order to avoid overly eager dom updates when typing in the code editors).
+			html.current = tokenObj.html;
+			css.current = tokenObj.css;
+			js.current = tokenObj.js;
+		} catch(e) {
+			console.warn('Couldn\'t import share token. The generator uses JSON.parse(), so this might be due to bad JSON. Try checking your code for errors. The error was', e);
+		}
+	}
+
+	// handle editor resizing
 	useEffect(() => {
 		const editors: NodeList = document.querySelectorAll('.codeeditor');
 		const mutationSettings: MutationObserverInit = {
@@ -59,15 +102,7 @@ const App: React.FC = () => {
 			editors.forEach(el => (el as HTMLDivElement).style.width = width);
 		};
 		const mutationObserver: MutationObserver = new MutationObserver(mutationCallback);
-		// let editorHeight = '';
-		editors.forEach((el, i: number) => {
-			// const htmlEl = el as HTMLDivElement;
-			// const height = window.getComputedStyle(htmlEl, null).getPropertyValue('height');
-
-			// if (i === 0) editorHeight = height.replace('px', '');
-			// htmlEl.style.flex = editorHeight;
-			mutationObserver.observe(el, mutationSettings);
-		});
+		editors.forEach((el, i: number) => mutationObserver.observe(el, mutationSettings));
 	}, []);
 
 	return (
@@ -82,20 +117,22 @@ const App: React.FC = () => {
 
 			{/* flexbox */}
 			<div className="playground__meta">
-				<div>
+				<div className="playground__meta__title">
 					<input type="text" value={title} placeholder="Project title" onChange={e => setTitle(e.target.value)} />
 				</div>
-				<div>
-					<input type="text" defaultValue={shareToken} placeholder="Your share token" />
-					<button title="Generate share token"><ShareIcon/></button>
-					<button>Import share token</button>
+				<div className="playground__meta__share">
+					<input type="text" value={shareToken} placeholder="Your share token" onChange={e => setShareToken(e.target.value)} />
+					<button className="iconBtn" title="Generate a share token that others can import" onClick={generateShareToken}><ShareIcon/></button>
+					<button className="iconBtn" title="Import share token" onClick={importShareToken}><ImportIcon/></button>
+					<button className="iconBtn" title="Export project files"><ExportIcon/></button>
+					{/* <button className="iconBtn" title="Download project"><DownloadIcon/></button> */}
 				</div>
 			</div>
 			<div className="playground__main">
 				<div className="playground__main__editors" ref={editorsEl}>
-					<CodeEditor language="html" value="" useLanguageSwitcher={false} onChange={changeHandler} />
-					<CodeEditor language="css" value="" useLanguageSwitcher={false} onChange={changeHandler} />
-					<CodeEditor language="js" value="" useLanguageSwitcher={false} onChange={changeHandler} />
+					<CodeEditor language="html" useLanguageSwitcher={false} onChange={changeHandler} />
+					<CodeEditor language="css" useLanguageSwitcher={false} onChange={changeHandler} />
+					<CodeEditor language="js" useLanguageSwitcher={false} onChange={changeHandler} />
 				</div>
 				<div className="playground__main__preview" ref={previewEl}></div>
 			</div>
