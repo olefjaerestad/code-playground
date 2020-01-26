@@ -1,4 +1,4 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<svg class="icon icon--import" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 	<g stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round">
 		<path d="
 			M 50,3
@@ -19,19 +19,19 @@
 		" pathLength="1" />
 	</g>
 	<style>
-	path {
+	.icon--import path {
 		transition: all .4s ease-in-out;
 	}
-	path:nth-of-type(2) {
+	.icon--import path:nth-of-type(2) {
 		transition-delay: .3s;
 	}
-	button:hover path,
-	button:focus path {
+	button:hover .icon--import path,
+	button:focus .icon--import path {
 		stroke-dasharray: 1;
 		stroke-dashoffset: 2;
 	}
-	button:hover path:nth-of-type(2),
-	button:focus path:nth-of-type(2) {
+	button:hover .icon--import path:nth-of-type(2),
+	button:focus .icon--import path:nth-of-type(2) {
 		stroke-dashoffset: -2;
 	}
 	</style>

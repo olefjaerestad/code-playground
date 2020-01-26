@@ -1,4 +1,4 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<svg class="icon icon--download" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
 	<g stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round">
 		<!-- <path d="
 			M 20,20
@@ -31,19 +31,19 @@
 		" pathLength="1" />
 	</g>
 	<style>
-	path {
+	.icon--download path {
 		transition: all .4s ease-in-out;
 	}
-	path:nth-of-type(2) {
+	.icon--download path:nth-of-type(2) {
 		transition-delay: .3s;
 	}
-	button:hover path,
-	button:focus path {
+	button:hover .icon--download path,
+	button:focus .icon--download path {
 		stroke-dasharray: 1;
 		stroke-dashoffset: 2;
 	}
-	button:hover path:nth-of-type(2),
-	button:focus path:nth-of-type(2) {
+	button:hover .icon--download path:nth-of-type(2),
+	button:focus .icon--download path:nth-of-type(2) {
 		stroke-dashoffset: -2;
 	}
 	</style>
