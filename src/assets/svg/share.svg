@@ -4,8 +4,8 @@
 	<circle cx="15" cy="50" r="15" stroke="#fff" stroke-width="6" fill="none" />
 	<circle cx="85" cy="15" r="15" stroke="#fff" stroke-width="6" fill="none" />
 	<circle cx="85" cy="85" r="15" stroke="#fff" stroke-width="6" fill="none" /> -->
-	<line x1="10" y1="50" x2="90" y2="10" stroke="#fff" stroke-width="6" />
-	<line x1="10" y1="50" x2="90" y2="90" stroke="#fff" stroke-width="6" />
+	<line x1="33" y1="42.5" x2="67" y2="25.5" stroke="#fff" stroke-width="6" />
+	<line x1="33" y1="57.5" x2="67" y2="74.5" stroke="#fff" stroke-width="6" />
 	<circle cx="18" cy="50" r="15" stroke="#fff" stroke-width="6" fill="none" />
 	<circle cx="82" cy="18" r="15" stroke="#fff" stroke-width="6" fill="none" />
 	<circle cx="82" cy="82" r="15" stroke="#fff" stroke-width="6" fill="none" />
