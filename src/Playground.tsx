@@ -1,10 +1,14 @@
-import React, {SyntheticEvent, useRef, useEffect} from 'react';
+import React, {SyntheticEvent, useRef, useEffect, useState} from 'react';
 import CodeEditor from './components/CodeEditor/CodeEditor'; // todo: replace with line below when npm module works correctly.
 import './Playground.css';
 // import CodeEditor from '@olefjaerestad/code-editor';
+import {ReactComponent as ShareIcon} from './assets/svg/share.svg';
 
 const App: React.FC = () => {
+	const [title, setTitle] = useState('Untitled');
+	const [shareToken, setShareToken] = useState('');
 	const previewEl = useRef<HTMLDivElement>(null);
+	const editorsEl = useRef<HTMLDivElement>(null);
 	const html = useRef<string>('');
 	const css = useRef<string>('');
 	const js = useRef<string>('');
@@ -38,19 +42,32 @@ const App: React.FC = () => {
 	}
 
 	useEffect(() => {
-		const observables: NodeList = document.querySelectorAll('.codeeditor');
+		const editors: NodeList = document.querySelectorAll('.codeeditor');
 		const mutationSettings: MutationObserverInit = {
 			attributes: true,
 		};
 		const mutationCallback = (mutationList: MutationRecord[], observer: MutationObserver) => {
-			const target = mutationList[0].target as HTMLDivElement;
-			const width = target.style.width;
-			const height = target.style.height;
-			// target.style.minHeight = target.style.maxHeight = height;
-			document.querySelectorAll('.codeeditor').forEach(el => (el as HTMLDivElement).style.width = width);
+			const targetEditor = mutationList[0].target as HTMLDivElement;
+			const targetIndex = Array.prototype.indexOf.call(editors, targetEditor);
+			const adjacentEditor = (editors[targetIndex+1] || editors[targetIndex-1]) as HTMLDivElement;
+			const leftoverEditor = editors[targetIndex === 0 ? 2 : 0] as HTMLDivElement;
+			const width = targetEditor.style.width;
+			const height = parseFloat(window.getComputedStyle(targetEditor, null).getPropertyValue('height'));
+			const leftoverHeight = parseFloat(window.getComputedStyle(leftoverEditor, null).getPropertyValue('height'));
+			const wrapperHeight = parseFloat(window.getComputedStyle(editorsEl.current as Element, null).getPropertyValue('height'));
+			adjacentEditor.style.height = (wrapperHeight - height - leftoverHeight) + 'px';
+			editors.forEach(el => (el as HTMLDivElement).style.width = width);
 		};
 		const mutationObserver: MutationObserver = new MutationObserver(mutationCallback);
-		observables.forEach(el => mutationObserver.observe(el, mutationSettings));
+		// let editorHeight = '';
+		editors.forEach((el, i: number) => {
+			// const htmlEl = el as HTMLDivElement;
+			// const height = window.getComputedStyle(htmlEl, null).getPropertyValue('height');
+
+			// if (i === 0) editorHeight = height.replace('px', '');
+			// htmlEl.style.flex = editorHeight;
+			mutationObserver.observe(el, mutationSettings);
+		});
 	}, []);
 
 	return (
@@ -64,9 +81,18 @@ const App: React.FC = () => {
 			<div className="playground__preview" ref={previewEl}></div> */}
 
 			{/* flexbox */}
-			<div className="playground__meta">Meta</div>
+			<div className="playground__meta">
+				<div>
+					<input type="text" value={title} placeholder="Project title" onChange={e => setTitle(e.target.value)} />
+				</div>
+				<div>
+					<input type="text" defaultValue={shareToken} placeholder="Your share token" />
+					<button title="Generate share token"><ShareIcon/></button>
+					<button>Import share token</button>
+				</div>
+			</div>
 			<div className="playground__main">
-				<div className="playground__main__editors">
+				<div className="playground__main__editors" ref={editorsEl}>
 					<CodeEditor language="html" value="" useLanguageSwitcher={false} onChange={changeHandler} />
 					<CodeEditor language="css" value="" useLanguageSwitcher={false} onChange={changeHandler} />
 					<CodeEditor language="js" value="" useLanguageSwitcher={false} onChange={changeHandler} />

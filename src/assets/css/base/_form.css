@@ -1,0 +1,17 @@
+input {
+	font-family: inherit;
+	font-size: 16px;
+	color: var(--color-white);
+	background-color: var(--color-darkGray);
+	padding: 5px;
+	border: 0;
+}
+
+button {
+	text-align: left;
+	color: var(--color-white);
+	background-color: transparent;
+	padding: 0;
+	border: 0;
+	appearance: none;
+}

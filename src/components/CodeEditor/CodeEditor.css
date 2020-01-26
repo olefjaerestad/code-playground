@@ -22,11 +22,24 @@
 	height: var(--height);
 	display: flex;
 	flex-direction: column;
+
+	overflow: hidden;
+	resize: both;
+	position: relative; /* fixes bug with resize handlers disappearing on focus-within */
 }
 .codeeditor,
 .codeeditor * {
 	outline-color: var(--color-darkblue);
 	box-sizing: border-box;
+}
+.codeeditor:after { /* makes sure the cursor changes to indicate resize */
+	content: '';
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	cursor: se-resize;
 }
 .codeeditor__content {
 	font-family: monospace;
@@ -39,6 +52,8 @@
 	font-size: 13px;
 	background-color: var(--color-darkblue);
 	height: var(--metaHeight);
+	padding-right: 8px;
+	padding-left: 8px;
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
