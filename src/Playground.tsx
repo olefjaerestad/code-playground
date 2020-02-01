@@ -5,6 +5,7 @@ import './Playground.css';
 import {ReactComponent as ShareIcon} from './assets/svg/share.svg';
 import {ReactComponent as ImportIcon} from './assets/svg/import.svg';
 import {ReactComponent as ExportIcon} from './assets/svg/export.svg';
+import {ReactComponent as PlayIcon} from './assets/svg/play.svg';
 // import {ReactComponent as DownloadIcon} from './assets/svg/download.svg';
 import {compressToUTF16, decompressFromUTF16} from 'lz-string';
 
@@ -16,10 +17,12 @@ const App: React.FC = () => {
 	const [jsState, setJsState] = useState('');
 	const [title, setTitle] = useState('Untitled');
 	const [shareToken, setShareToken] = useState('');
+	const [tokenIsOpen, setTokenIsOpen] = useState(false);
 
 	// refs
 	const previewEl = useRef<HTMLDivElement>(null);
 	const editorsEl = useRef<HTMLDivElement>(null);
+	const runButtonEl = useRef<HTMLButtonElement>(null)
 	const html = useRef<string>(''); // note: we're using these in addition to the state, so we can store values without rerendering child component.
 	const css = useRef<string>('');
 	const js = useRef<string>('');
@@ -63,6 +66,7 @@ const App: React.FC = () => {
 	}
 
 	const run = () => {
+		highlightRunButton();
 		// @ts-ignore
 		if (document.getElementById('output')) previewEl.current.removeChild(document.getElementById('output'));
 		const iframe = document.createElement('iframe');
@@ -74,6 +78,11 @@ const App: React.FC = () => {
 		iframeDocument.open();
 		iframeDocument.writeln(`<body>${html.current}</body><style>${css.current}</style><script>${js.current}</script>`);
 		iframeDocument.close();
+	}
+
+	const highlightRunButton = () => {
+		runButtonEl.current?.classList.add('isActive');
+		setTimeout(() => runButtonEl.current?.classList.remove('isActive'), 1000);
 	}
 
 	const generateShareToken = (e: SyntheticEvent) => {
@@ -141,11 +150,11 @@ const App: React.FC = () => {
 					<input type="text" value={title} placeholder="Project title" onChange={e => setTitle(e.target.value)} />
 				</div>
 				<div className="playground__meta__share">
-					<button className="iconBtn" title="Run code" onClick={run}>Run</button>
-					<input type="text" value={shareToken} placeholder="Your share token" onChange={e => setShareToken(e.target.value)} />
-					<button className="iconBtn" title="Generate a share token that others can import" onClick={generateShareToken}><ShareIcon/></button>
-					<button className="iconBtn" title="Import share token" onClick={importShareToken}><ImportIcon/></button>
-					<button className="iconBtn" title="Export project files"><ExportIcon/></button>
+					<button className="iconBtn" title="Run code" onClick={run} ref={runButtonEl}><PlayIcon /></button>
+					{(shareToken || tokenIsOpen) && <input type="text" value={shareToken} placeholder="Your share token" onChange={e => setShareToken(e.target.value)} />}
+					<button className="iconBtn" title="Generate a share token that others can import in order to view your code" onClick={generateShareToken}><ShareIcon /></button>
+					<button className="iconBtn" title="Import share token" onClick={e => shareToken.length > 0 ? importShareToken(e) : setTokenIsOpen(!tokenIsOpen)}><ImportIcon /></button>
+					<button className="iconBtn" title="Export project files"><ExportIcon /></button>
 					{/* <button className="iconBtn" title="Download project"><DownloadIcon/></button> */}
 				</div>
 			</div>

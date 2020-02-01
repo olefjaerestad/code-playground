@@ -1,0 +1,22 @@
+<svg class="icon icon--play" viewBox="0 0 100 100">
+	<polygon points="0,0 100,50 0,100" fill="var(--color-success)" pathLength="1" />
+	<style>
+	.icon--play polygon {
+		transition: all .5s ease-in-out;
+	}
+	.isActive .icon--play polygon {
+		animation: activePlayPolygon .5s linear infinite;
+	}
+	@keyframes activePlayPolygon {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	</style>
+</svg>

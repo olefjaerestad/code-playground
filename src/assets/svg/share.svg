@@ -2,8 +2,8 @@
 	<g stroke="#fff" stroke-width="6">
 		<line x1="33" y1="42.5" x2="67" y2="25.5" />
 		<line x1="33" y1="57.5" x2="67" y2="74.5" />
-		<circle cx="18" cy="50" r="15" fill="none" pathLength="1" />
 		<circle cx="82" cy="18" r="15" fill="none" pathLength="1" />
+		<circle cx="18" cy="50" r="15" fill="none" pathLength="1" />
 		<circle cx="82" cy="82" r="15" fill="none" pathLength="1" />
 	</g>
 	<style>
