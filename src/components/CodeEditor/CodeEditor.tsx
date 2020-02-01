@@ -5,10 +5,11 @@ import './CodeEditor.css';
 // http://blog.stevenlevithan.com/archives/mimic-lookbehind-javascript
 // todo: ask for confirmation before closing app? no. do it in the full code playground app instead.
 const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageSwitcher?: boolean, value?: string}> = (props: any) => {
+	console.log('[CodeEditor] render...');
 	// settings.
 	const languages = ['html', 'js', 'css'];
 	const useLanguageSwitcher = props.useLanguageSwitcher !== undefined ? props.useLanguageSwitcher : true;
-	const indentSize = 4;
+	const indentSize = 2;
 
 	// state.
 	const [language, setLanguage] = useState(props.language && languages.includes(props.language) ? props.language : 'html');
@@ -102,11 +103,20 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 		],
 	};
 
-	// makes sure code passed in props.value gets prettified.
+	// makes sure code passed in props.value on component init gets prettified.
+	// useEffect(() => {
+	// 	prettifyCode(code);
+	// 	setRowHeights(getRowHeights());
+	// }, []);
+	// makes sure code passed in props.value updates the state
 	useEffect(() => {
-		prettifyCode(code);
-		setRowHeights(getRowHeights());
-	}, []);
+		if (props.value) {
+			const latestCode = JSON.parse(props.value);
+			setCode(latestCode);
+			prettifyCode(latestCode);
+			setRowHeights(getRowHeights(latestCode));
+		}
+	}, [props.value]);
 
 	// makes sure code passed in props.value gets passed to props.onChange on component init.
 	useEffect(() => {
@@ -203,9 +213,9 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 		setPrettyCode(formattedCode);
 	}
 
-	const getRowHeights = (): number[] => {
+	const getRowHeights = (code?: string): number[] => {
 		let rows: number[] = [];
-		const latestCode = textArea.current?.value;
+		const latestCode = code || textArea.current?.value;
 		// const cursorPos = textArea.current?.selectionStart;
 		const currentRows = (latestCode || '').split('\n');
 		// @ts-ignore
@@ -306,7 +316,6 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 			<div className="codeeditor__meta">
 				<span>Row: {currentRow}</span>
 				<span>Col: {currentCol}</span>
-				{/* <span>{rowHeights.length} rows</span> */}
 				<span>Characters: {code.length}</span>
 				{useLanguageSwitcher ? <select
 				value={language}
