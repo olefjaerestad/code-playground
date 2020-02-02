@@ -84,6 +84,18 @@
 	width: 100%;
 	border: 0;
 }
+.playground__main__preview__placeholder {
+	text-align: center;
+	color: var(--color-white);
+	background-color: var(--color-gray);
+	height: 100%;
+	width: 100%;
+	padding: 20px;
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
 .playground .codeeditor {
 	height: 33.3333%;

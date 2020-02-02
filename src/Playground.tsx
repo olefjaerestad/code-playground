@@ -16,7 +16,7 @@ const App: React.FC = () => {
 	const [htmlState, setHtmlState] = useState('');
 	const [cssState, setCssState] = useState('');
 	const [jsState, setJsState] = useState('');
-	const [title, setTitle] = useState('Untitled');
+	const [title, setTitle] = useState('Untitled project');
 	const [shareToken, setShareToken] = useState('');
 	const [tokenIsOpen, setTokenIsOpen] = useState(false);
 	const [message, setMessage] = useState<string|null>(null);
@@ -24,6 +24,7 @@ const App: React.FC = () => {
 	// refs
 	const containerEl = useRef<HTMLDivElement>(null)
 	const previewEl = useRef<HTMLDivElement>(null);
+	const previewElPlaceholder = useRef<HTMLParagraphElement>(null);
 	const editorsEl = useRef<HTMLDivElement>(null);
 	const runButtonEl = useRef<HTMLButtonElement>(null)
 	const html = useRef<string>(''); // note: we're using these in addition to the state, so we can store values without rerendering child component.
@@ -75,6 +76,7 @@ const App: React.FC = () => {
 
 	const run = () => {
 		highlightRunButton();
+		if (previewElPlaceholder.current) previewElPlaceholder.current.style.display = 'none';
 		// @ts-ignore
 		if (document.getElementById('output')) previewEl.current.removeChild(document.getElementById('output'));
 		const iframe = document.createElement('iframe');
@@ -186,7 +188,12 @@ const App: React.FC = () => {
 					<CodeEditor language="css" value={JSON.stringify(cssState)} useLanguageSwitcher={false} onChange={changeHandler} />
 					<CodeEditor language="js" value={JSON.stringify(jsState)} useLanguageSwitcher={false} onChange={changeHandler} />
 				</div>
-				<div className="playground__main__preview" ref={previewEl}></div>
+				<div className="playground__main__preview" ref={previewEl}>
+					<p className="playground__main__preview__placeholder" ref={previewElPlaceholder}>
+						Get started by writing some code and running it (play icon or cmd/ctrl+s from inside an editor).<br/>
+						Use the top bar to share your code with others, import others' code or download your code.
+					</p>
+				</div>
 			</div>
 
 			{message && <span className="playground__message"><button className="playground__message__close" onClick={e => setMessage(null)}><CloseIcon /></button>{message}</span>}

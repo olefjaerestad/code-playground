@@ -2,6 +2,7 @@ html {
 	--color-primary: hsl(270, 50%, 40%);
 	--color-success: hsl(136, 80%, 44%);
 	--color-white: hsl(0, 0%, 100%);
+	--color-gray: hsl(230, 20%, 30%);
 	--color-darkGray: hsl(0, 0%, 20%);
 	--color-black: hsl(228, 9%, 11%);
 
