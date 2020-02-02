@@ -13,7 +13,7 @@
 	--color-white-transparent: hsla(0, 0%, 100%, .5);
 	--color-gray: hsl(0, 0%, 50%);
 	--color-background: hsl(228, 9%, 11%);
-	--height: 50vh;
+	--height: 100vh;
 	--metaHeight: 30px;
 
 	font-size: var(--font-size);

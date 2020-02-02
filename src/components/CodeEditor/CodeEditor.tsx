@@ -43,7 +43,7 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 		],
 		js: [
 			{
-				code: /(var|let|const|function|=&gt;|class|new|true)/gm,
+				code: /(var|let|const|function|=&gt;|class|new|true|extends)/gm,
 				classes: 'c--blue',
 			},
 			{
@@ -59,7 +59,7 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 				classes: 'c--orange',
 			},
 			{
-				code: /(if|else|return|\.{3})/gm,
+				code: /(for|while|if|else|return|\.{3})/gm,
 				classes: 'c--purple',
 			},
 			{
