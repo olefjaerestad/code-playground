@@ -172,7 +172,7 @@ const App: React.FC = () => {
 					<input type="text" value={title} placeholder="Project title" onChange={e => setTitle(e.target.value)} />
 				</div>
 				<div className="playground__meta__share">
-					<button className="iconBtn" title="Run code. You can also use cmd/ctrl+s." onClick={run} ref={runButtonEl}><PlayIcon /></button>
+					<button className="iconBtn" title="Run code. You can also use cmd/ctrl+s from inside an editor." onClick={run} ref={runButtonEl}><PlayIcon /></button>
 					<button className="iconBtn" title="Generate a share token that others can import in order to view your code." onClick={generateShareToken}><ShareIcon /></button>
 					{(shareToken || tokenIsOpen) && <input type="text" value={shareToken} placeholder="Your share token" onChange={e => setShareToken(e.target.value)} />}
 					<button className={`iconBtn ${shareToken && 'isActive'}`} title="Import share token." onClick={e => shareToken.length > 0 ? importShareToken(e) : setTokenIsOpen(!tokenIsOpen)}><ImportIcon /></button>
