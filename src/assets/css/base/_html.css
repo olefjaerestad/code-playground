@@ -1,4 +1,5 @@
 html {
+	--color-primary: hsl(270, 50%, 40%);
 	--color-success: hsl(136, 80%, 44%);
 	--color-white: hsl(0, 0%, 100%);
 	--color-darkGray: hsl(0, 0%, 20%);

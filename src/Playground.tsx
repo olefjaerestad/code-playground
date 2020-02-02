@@ -6,6 +6,7 @@ import {ReactComponent as ShareIcon} from './assets/svg/share.svg';
 import {ReactComponent as ImportIcon} from './assets/svg/import.svg';
 import {ReactComponent as ExportIcon} from './assets/svg/export.svg';
 import {ReactComponent as PlayIcon} from './assets/svg/play.svg';
+import {ReactComponent as CloseIcon} from './assets/svg/close.svg';
 // import {ReactComponent as DownloadIcon} from './assets/svg/download.svg';
 import {compressToUTF16, decompressFromUTF16} from 'lz-string';
 
@@ -18,8 +19,10 @@ const App: React.FC = () => {
 	const [title, setTitle] = useState('Untitled');
 	const [shareToken, setShareToken] = useState('');
 	const [tokenIsOpen, setTokenIsOpen] = useState(false);
+	const [message, setMessage] = useState<string|null>(null);
 
 	// refs
+	const containerEl = useRef<HTMLDivElement>(null)
 	const previewEl = useRef<HTMLDivElement>(null);
 	const editorsEl = useRef<HTMLDivElement>(null);
 	const runButtonEl = useRef<HTMLButtonElement>(null)
@@ -47,6 +50,11 @@ const App: React.FC = () => {
 		};
 		const mutationObserver: MutationObserver = new MutationObserver(mutationCallback);
 		editors.forEach((el, i: number) => mutationObserver.observe(el, mutationSettings));
+	}, []);
+
+	// auto focus first code editor
+	useEffect(() => {
+		(document.querySelector('.codeeditor__content__main__writer') as HTMLTextAreaElement).focus();
 	}, []);
 
 	const changeHandler = (code: string, language: string, e: SyntheticEvent|undefined) => {
@@ -80,6 +88,18 @@ const App: React.FC = () => {
 		iframeDocument.close();
 	}
 
+	const download = async (e: SyntheticEvent) => {
+		// https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
+		const doc = 
+		`<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>${title}</title>\n\t</head>\n\t<body>\n\t\t${html.current}\n\t\t<style>\n\t\t\t${css.current}\n\t\t</style>\n\t\t<script>\n\t\t\t${js.current}\n\t\t</script>\n\t</body>\n</html>`;
+		const anchor = document.createElement('a');
+		anchor.href = `data:text/html;charset=utf-8,${encodeURIComponent(doc)}`;
+		anchor.download = 'index.html';
+		containerEl.current?.appendChild(anchor);
+		anchor.click();
+		containerEl.current?.removeChild(anchor);
+	}
+
 	const highlightRunButton = () => {
 		runButtonEl.current?.classList.add('isActive');
 		setTimeout(() => runButtonEl.current?.classList.remove('isActive'), 1000);
@@ -95,7 +115,8 @@ const App: React.FC = () => {
 			}));
 			setShareToken(tokenString);
 		} catch(e) {
-			console.log('Couldn\'t generate share token. The generator uses JSON.stringify(), so this might be due to bad JSON. Try checking your code for errors.');
+			// console.log('Couldn\'t generate share token. The generator uses JSON.stringify(), so this might be due to bad JSON. Try checking your code for errors.');
+			setMessage(`Couldn\'t generate share token. The generator uses JSON.stringify(), so this might be due to bad JSON. Try checking your code for errors. The error was: \n ${e}`);
 		}
 	}
 
@@ -122,7 +143,8 @@ const App: React.FC = () => {
 			run();
 			
 		} catch(e) {
-			console.warn('Couldn\'t import share token. The generator uses JSON.parse(), so this might be due to bad JSON. Try checking your code for errors. The error was: \n', e);
+			// console.warn('Couldn\'t import share token. The generator uses JSON.parse(), so this might be due to bad JSON. Try checking your code for errors. The error was: \n', e);
+			setMessage(`Couldn\'t import share token. The import uses JSON.parse(), so this might be due to bad JSON. Try checking your code for errors. The error was: \n ${e}`);
 		}
 	}
 
@@ -135,7 +157,7 @@ const App: React.FC = () => {
 	}
 
 	return (
-		<div className="playground" onKeyDown={keyDownHandler}>
+		<div className="playground" onKeyDown={keyDownHandler} ref={containerEl}>
 
 			{/* grid */}
 			{/* <div className="playground__meta">Meta</div>
@@ -150,11 +172,11 @@ const App: React.FC = () => {
 					<input type="text" value={title} placeholder="Project title" onChange={e => setTitle(e.target.value)} />
 				</div>
 				<div className="playground__meta__share">
-					<button className="iconBtn" title="Run code" onClick={run} ref={runButtonEl}><PlayIcon /></button>
+					<button className="iconBtn" title="Run code. You can also use cmd/ctrl+s." onClick={run} ref={runButtonEl}><PlayIcon /></button>
+					<button className="iconBtn" title="Generate a share token that others can import in order to view your code." onClick={generateShareToken}><ShareIcon /></button>
 					{(shareToken || tokenIsOpen) && <input type="text" value={shareToken} placeholder="Your share token" onChange={e => setShareToken(e.target.value)} />}
-					<button className="iconBtn" title="Generate a share token that others can import in order to view your code" onClick={generateShareToken}><ShareIcon /></button>
-					<button className="iconBtn" title="Import share token" onClick={e => shareToken.length > 0 ? importShareToken(e) : setTokenIsOpen(!tokenIsOpen)}><ImportIcon /></button>
-					<button className="iconBtn" title="Export project files"><ExportIcon /></button>
+					<button className={`iconBtn ${shareToken && 'isActive'}`} title="Import share token." onClick={e => shareToken.length > 0 ? importShareToken(e) : setTokenIsOpen(!tokenIsOpen)}><ImportIcon /></button>
+					<button className="iconBtn" title="Export project files." onClick={download}><ExportIcon /></button>
 					{/* <button className="iconBtn" title="Download project"><DownloadIcon/></button> */}
 				</div>
 			</div>
@@ -166,6 +188,8 @@ const App: React.FC = () => {
 				</div>
 				<div className="playground__main__preview" ref={previewEl}></div>
 			</div>
+
+			{message && <span className="playground__message"><button className="playground__message__close" onClick={e => setMessage(null)}><CloseIcon /></button>{message}</span>}
 			
 		</div>
 	);

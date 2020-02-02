@@ -1,0 +1,20 @@
+<svg class="icon icon--close" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+	<g stroke="#fff" stroke-width="6" stroke-linecap="round">
+		<line x1="3" y1="3" x2="97" y2="97" />
+		<line x1="3" y1="97" x2="97" y2="3" />
+	</g>
+	<style>
+	.icon--close line {
+		transform-origin: center;
+		transition: all .2s ease-in-out;
+	}
+	button:hover .icon--close line:nth-of-type(1),
+	button:focus .icon--close line:nth-of-type(1) {
+		transform: rotateZ(-45deg);
+	}
+	button:hover .icon--close line:nth-of-type(2),
+	button:focus .icon--close line:nth-of-type(2) {
+		transform: rotateZ(45deg);
+	}
+	</style>
+</svg>
