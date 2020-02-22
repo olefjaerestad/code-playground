@@ -297,6 +297,7 @@ const CodeEditor: React.FC<{onChange?: Function, language?: string, useLanguageS
 					className="codeeditor__content__main__writer" 
 					placeholder={`${language} here...`}
 					spellCheck="false" 
+					autoComplete="off" 
 					ref={textArea}
 					value={code}
 					onChange={changeHandler}
